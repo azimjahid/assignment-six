@@ -33,7 +33,7 @@ const getImages = (query) => {
   toggleSpinner(true);
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
-    .then(data => showImages(data.hitS))
+    .then(data => showImages(data.hits))
     .catch(err => console.log(err))
 }
 
@@ -50,6 +50,7 @@ const selectItem = (event, img) => {
     element.classList.remove('added');
   }
 }
+
 var timer
 const createSlider = () => {
   // check slider image length
@@ -72,7 +73,7 @@ const createSlider = () => {
   imagesArea.style.display = 'none';
   const duration = document.getElementById('duration').value || 1000;
   if (duration <= 0) {
-    alert('please enter positive number')
+    alert('please enter positive time value')
     return;
   }
   sliders.forEach(slide => {
@@ -128,12 +129,10 @@ sliderBtn.addEventListener('click', function () {
   createSlider()
 })
 
-//add keypress
+//add key
 document.getElementById("search")
 addEventListener("keypress", function (event) {
   if (event.key === 'Enter') {
-    // document.getElementsById("search-btn").click();
-
     searchBtn.click();
   }
 });
