@@ -23,12 +23,14 @@ const showImages = (images) => {
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div)
+    gallery.appendChild(div);
+    toggleSpinner(false);
   })
 
 }
 
 const getImages = (query) => {
+  toggleSpinner(true);
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data.hitS))
@@ -38,13 +40,14 @@ const getImages = (query) => {
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
-  element.classList.add('added');
- 
+
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
+    element.classList.add('added');
   } else {
-    alert('Hey, Already added !')
+    sliders.splice(item, 1);
+    element.classList.remove('added');
   }
 }
 var timer
@@ -68,6 +71,10 @@ const createSlider = () => {
   // hide image aria
   imagesArea.style.display = 'none';
   const duration = document.getElementById('duration').value || 1000;
+  if (duration <= 0) {
+    alert('please enter positive number')
+    return;
+  }
   sliders.forEach(slide => {
     let item = document.createElement('div')
     item.className = "slider-item";
@@ -120,3 +127,26 @@ searchBtn.addEventListener('click', function () {
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
+
+//add keypress
+document.getElementById("search")
+addEventListener("keypress", function (event) {
+  if (event.key === 'Enter') {
+    // document.getElementsById("search-btn").click();
+
+    searchBtn.click();
+  }
+});
+
+// add spinner
+const toggleSpinner = (show) => {
+  const spinner = document.getElementById('loading-spinner');
+
+  if (show) {
+    spinner.classList.remove('d-none');
+  } else {
+    spinner.classList.add('d-none');
+  }
+}
+
+// Thank You
